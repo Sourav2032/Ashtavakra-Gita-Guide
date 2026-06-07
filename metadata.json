@@ -1,0 +1,6 @@
+{
+  "name": "Ashtavakra Gita AI Chat",
+  "description": "A modern spiritual chat and semantic search app for the Sanskrit shlokas and Hindi translations of the Ashtavakra Gita, powered by vector embeddings.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

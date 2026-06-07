@@ -1,0 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Fira+Code:wght@400;500&display=swap');
+@import "tailwindcss";
+
+:root {
+  --color-dark-bg: #0a0a0c;
+  --color-dark-surface: #0f0f12;
+  --color-dark-aside: #0d0d10;
+  --color-dark-card: #16161a;
+  --color-gold-accent: #c48e2c;
+  --color-gold-light: #f4d03f;
+  
+  --title-text-color: #ffffff;
+  --body-text-color: #e0e0e0;
+  --sub-text-color: #9ca3af;
+  --border-primary: rgba(255, 255, 255, 0.1);
+  --border-secondary: rgba(255, 255, 255, 0.05);
+  --box-bg-light: rgba(255, 255, 255, 0.05);
+  --box-bg-active: rgba(255, 255, 255, 0.1);
+  --inner-darker-bg: #1a1a1e;
+  --card-shadow: inset 0px 0px 50px rgba(0,0,0,0.5);
+}
+
+[data-theme="parchment"] {
+  --color-dark-bg: #f5ecd6; /* Ancient warm scripture parchment card */
+  --color-dark-surface: #ebd6a4; /* Sacred rich orange-tan scroll handle */
+  --color-dark-aside: #ebd6a4;
+  --color-dark-card: #fdfaf2; /* Holy smooth script paper backdrop */
+  --color-gold-accent: #8b4513; /* Elegant clay-ink chestnut brown for premium contrast readability */
+  --color-gold-light: #a0522d;
+  
+  --title-text-color: #3b220c; /* Heavy ink brown */
+  --body-text-color: #4a2f15; /* Saffron/sepia ink */
+  --sub-text-color: #725a3d; /* Soft sandbrown */
+  --border-primary: rgba(139, 69, 19, 0.25);
+  --border-secondary: rgba(139, 69, 19, 0.12);
+  --box-bg-light: rgba(139, 69, 19, 0.06);
+  --box-bg-active: rgba(139, 69, 19, 0.12);
+  --inner-darker-bg: #eddcb1; /* Deep parchment pulp */
+  --card-shadow: inset 0px 0px 60px rgba(139, 69, 19, 0.07);
+}
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Lora", Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-mono: "Fira Code", monospace;
+  
+  --color-dark-bg: var(--color-dark-bg);
+  --color-dark-surface: var(--color-dark-surface);
+  --color-dark-aside: var(--color-dark-aside);
+  --color-dark-card: var(--color-dark-card);
+  --color-gold-accent: var(--color-gold-accent);
+  --color-gold-light: var(--color-gold-light);
+}
+
+body {
+  background-color: var(--color-dark-bg);
+  color: var(--body-text-color);
+  @apply antialiased font-sans selection:bg-gold-accent/30 selection:text-white;
+}
+
+/* Explicit class-based overrides for theme morph validation */
+[data-theme="parchment"] .text-white,
+[data-theme="parchment"] h1,
+[data-theme="parchment"] h2,
+[data-theme="parchment"] h3 {
+  color: var(--title-text-color) !important;
+}
+
+[data-theme="parchment"] .text-\[\#e0e0e0\] {
+  color: var(--body-text-color) !important;
+}
+
+[data-theme="parchment"] .text-gray-300,
+[data-theme="parchment"] .text-gray-200 {
+  color: var(--body-text-color) !important;
+}
+
+[data-theme="parchment"] .text-gray-400 {
+  color: var(--sub-text-color) !important;
+}
+
+[data-theme="parchment"] .text-gray-500 {
+  color: var(--sub-text-color) !important;
+}
+
+[data-theme="parchment"] .border-white\/10 {
+  border-color: var(--border-primary) !important;
+}
+
+[data-theme="parchment"] .border-white\/5 {
+  border-color: var(--border-secondary) !important;
+}
+
+[data-theme="parchment"] .bg-white\/5 {
+  background-color: var(--box-bg-light) !important;
+}
+
+[data-theme="parchment"] .bg-white\/10 {
+  background-color: var(--box-bg-active) !important;
+}
+
+[data-theme="parchment"] .bg-\[\#0f0f12\] {
+  background-color: var(--color-dark-surface) !important;
+}
+
+[data-theme="parchment"] .bg-\[\#16161a\] {
+  background-color: var(--color-dark-card) !important;
+}
+
+[data-theme="parchment"] .bg-\[\#1a1a1e\] {
+  background-color: var(--inner-darker-bg) !important;
+}
+
+[data-theme="parchment"] .bg-dark-bg {
+  background-color: var(--color-dark-bg) !important;
+}
+
+[data-theme="parchment"] #shloka-details-viewport {
+  box-shadow: var(--card-shadow) !important;
+}
+
+/* Scrollbar customization for list */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #33333b;
+  border-radius: 4px;
+}
+[data-theme="parchment"] ::-webkit-scrollbar-thumb {
+  background: #c3b292;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c48e2c;
+}
+
