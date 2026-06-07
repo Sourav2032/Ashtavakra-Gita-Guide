@@ -7,25 +7,45 @@ interface ChatInterfaceProps {
   onSelectShloka: (shloka: ShlokaChunk) => void;
 }
 
-const SUGGESTIONS = [
-  "ज्ञान कैसे प्राप्त होता है?",
-  "मुक्ति और बन्धन में क्या अंतर है?",
-  "साक्षी भाव (Observer) क्या है?",
-  "देह और अज्ञान के पाश से कैसे मुक्त हों?"
+const MULTILINGUAL_DATA = [
+  {
+    greeting: 'Om Shanti. I am the guide of Ashtavakra Gita. Ask me your spiritual questions like King Janaka, and I will resolve your doubts with the light of Vedic wisdom.',
+    suggestions: ['How to attain knowledge?', 'Difference between liberation and bondage?', 'What is the Observer state?', 'How to be free from ignorance?'],
+    placeholder: 'Ask Sage Ashtavakra a spiritual question...'
+  },
+  {
+    greeting: 'ॐ शान्ति:। मैं अष्टावक्र गीता का उपदेशक हूँ। राजा जनक की भाँति अपनी आत्मिक जिज्ञासाएँ मुझसे पूछें। मैं वैदिक श्लोकों के प्रकाश में आपके संशयों का निवारण करूँगा।',
+    suggestions: ['ज्ञान कैसे प्राप्त होता है?', 'मुक्ति और बंधन में क्या अंतर है?', 'साक्षी भाव (Observer) क्या है?', 'देह और अज्ञान के पाश से कैसे मुक्त हों?'],
+    placeholder: 'अष्टावक्र उपदेशक से अध्यात्म सम्बन्धी प्रश्न पूछें...'
+  },
+  {
+    greeting: 'ওঁ শান্তি। আমি অষ্টাবক্র গীতার উপদেশক। রাজা জনকের মতো আপনার আধ্যাত্মিক প্রশ্ন আমাকে জিজ্ঞাসা করুন। আমি বৈদিক শ্লোকের আলোতে আপনার সংশয় দূর করব।',
+    suggestions: ['জ্ঞান কীভাবে লাভ হয়?', 'মুক্তি ও বন্ধনের মধ্যে পার্থক্য কী?', 'সাক্ষী ভাব কী?', 'অজ্ঞানের পাশ থেকে কীভাবে মুক্ত হব?'],
+    placeholder: 'অষ্টাবক্র উপদেশককে আপনার আধ্যাত্মিক প্রশ্ন জিজ্ঞাসা করুন...'
+  }
 ];
 
 export default function ChatInterface({ onSelectShloka }: ChatInterfaceProps) {
+  const [currentLangIndex, setCurrentLangIndex] = useState(0);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: "welcome",
       role: "model",
-      content: "ॐ शान्तिः। मैं अष्टावक्र गीता का उपदेशक हूँ। राजा जनक की भाँति अपनी आत्मिक जिज्ञासाएँ मुझसे पूछें। मैं स्मृति में संकलित वास्तविक वैदिक श्लोकों और उनके आध्यात्मिक अनुवादों के प्रकाश में साक्षी भाव से आपके संशयों का निवारण करूँगा।",
+      content: "",
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
   ]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Cycle languages every 4 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentLangIndex(prev => (prev + 1) % 3);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Scroll to bottom on updates
   useEffect(() => {
@@ -133,8 +153,11 @@ export default function ChatInterface({ onSelectShloka }: ChatInterfaceProps) {
                   : "bg-gradient-to-r from-gold-accent/20 to-gold-accent/10 border border-gold-accent/30 text-white rounded-tr-sm"
               }`}>
                 {/* Clean formatted outputs */}
-                <div className="whitespace-pre-line leading-relaxed text-gray-200">
-                  {m.content}
+                <div 
+                  key={m.id === "welcome" ? `welcome-${currentLangIndex}` : m.id}
+                  className={`whitespace-pre-line leading-relaxed text-gray-200 ${m.id === "welcome" ? "animate-fade-in transition-all duration-500" : ""}`}
+                >
+                  {m.id === "welcome" ? MULTILINGUAL_DATA[currentLangIndex].greeting : m.content}
                 </div>
 
                 {/* Grounding Source nodes inside assistant response Card */}
@@ -192,14 +215,16 @@ export default function ChatInterface({ onSelectShloka }: ChatInterfaceProps) {
         <div className="p-4 bg-[#0f0f12] border-t border-white/10 shrink-0 space-y-2">
           <p className="text-[10px] font-semibold text-gray-500 tracking-wider uppercase flex items-center gap-1">
             <MessageSquare className="w-3.5 h-3.5 text-gold-accent" />
-            जिज्ञासुओं के सामान्य प्रश्न (सुझाव):
+            {currentLangIndex === 0 && "Common Questions from Seekers (Suggestions):"}
+            {currentLangIndex === 1 && "जिज्ञासुओं के सामान्य प्रश्न (सुझाव):"}
+            {currentLangIndex === 2 && "জিজ্ঞাসুদের সাধারণ প্রশ্ন (পরামর্শ):"}
           </p>
-          <div className="flex flex-wrap gap-1.5">
-            {SUGGESTIONS.map((s, idx) => (
+          <div className="flex flex-wrap gap-1.5 min-h-[40px]">
+            {MULTILINGUAL_DATA[currentLangIndex].suggestions.map((s, idx) => (
               <button
-                key={idx}
+                key={`${currentLangIndex}-${idx}`}
                 onClick={() => handleSendMessage(s)}
-                className="text-[11px] px-3 py-1.5 hover:bg-white/15 hover:text-white text-gray-300 bg-white/5 border border-white/10 rounded-xl transition-all cursor-pointer text-left"
+                className="text-[11px] px-3 py-1.5 hover:bg-white/15 hover:text-white text-gray-300 bg-white/5 border border-white/10 rounded-xl transition-all cursor-pointer text-left animate-fade-in"
               >
                 {s}
               </button>
@@ -214,7 +239,7 @@ export default function ChatInterface({ onSelectShloka }: ChatInterfaceProps) {
           type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          placeholder="अष्टावक्र उपदेशक से अध्यात्म अथवा श्लोक सम्बन्धी प्रश्न पूछें..."
+          placeholder={MULTILINGUAL_DATA[currentLangIndex].placeholder}
           disabled={isLoading}
           className="flex-1 text-sm pl-4 pr-3 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-gray-600 focus:outline-none focus:border-gold-accent focus:bg-[#16161a] transition-all disabled:opacity-50"
           id="chat-send-input-box"

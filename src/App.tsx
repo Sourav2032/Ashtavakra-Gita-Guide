@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ShlokaChunk } from "./types";
 import ShlokaList, { CHAPTER_NAMES, CHAPTER_DATA } from "./components/ShlokaList";
 import ChatInterface from "./components/ChatInterface";
@@ -173,12 +173,13 @@ export default function App() {
     };
   }, []);
 
+  const shlokaCardRef = useRef<HTMLDivElement>(null);
+
   const handleSelectShloka = (shloka: ShlokaChunk) => {
     setSelectedShloka(shloka);
-    // Smoothly scroll selected shloka details card into view on mobile
-    const el = document.getElementById("shloka-details-viewport");
-    if (el && window.innerWidth < 1024) {
-      el.scrollIntoView({ behavior: "smooth" });
+    // Smoothly scroll selected shloka details card into view
+    if (shlokaCardRef.current) {
+      shlokaCardRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
@@ -251,6 +252,7 @@ export default function App() {
           
           {/* Active Shloka detailed viewer Card (Styled like premium holy parchment) */}
           <section 
+            ref={shlokaCardRef}
             id="shloka-details-viewport"
             className="relative bg-dark-card rounded-3xl border border-white/10 p-6 lg:p-8 shadow-inner overflow-hidden flex flex-col gap-5 min-h-[220px]"
           >

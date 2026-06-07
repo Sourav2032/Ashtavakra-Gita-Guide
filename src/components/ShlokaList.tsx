@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { Search, Compass, BookOpen, Layers, Trophy, RotateCcw, Check } from "lucide-react";
 import { ShlokaChunk } from "../types";
 
@@ -50,6 +50,14 @@ export default function ShlokaList({
 }: ShlokaListProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedChapter, setSelectedChapter] = useState<string>("all");
+  const verseListRef = useRef<HTMLDivElement>(null);
+
+  const handleChapterSelect = (chapter: string) => {
+    setSelectedChapter(chapter);
+    if (verseListRef.current) {
+      verseListRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   // Progress and spiritual scaling calculations
   const totalShlokasCount = 298;
@@ -163,7 +171,7 @@ export default function ShlokaList({
         </label>
         <div className="flex flex-wrap gap-1.5" id="chapter-filter-tags">
           <button
-            onClick={() => setSelectedChapter("all")}
+            onClick={() => handleChapterSelect("all")}
             className={`px-3 py-1.5 text-xs rounded-xl border transition-all cursor-pointer ${
               selectedChapter === "all"
                 ? "bg-gold-accent/15 text-gold-accent border-gold-accent/30 font-semibold"
@@ -177,7 +185,7 @@ export default function ShlokaList({
             return (
               <button
                 key={c}
-                onClick={() => setSelectedChapter(String(c))}
+                onClick={() => handleChapterSelect(String(c))}
                 className={`px-3 py-1.5 rounded-xl border transition-all cursor-pointer hover:scale-[1.01] active:scale-95 duration-150 text-left ${
                   selectedChapter === String(c)
                     ? "bg-gold-accent/15 text-gold-accent border-gold-accent/30 font-medium"
@@ -199,7 +207,11 @@ export default function ShlokaList({
       </div>
 
       {/* Selected Filter Title Header */}
-      <div className="flex flex-col gap-1 pb-2.5 border-b border-white/10" id="active-chapter-summary-header">
+      <div 
+        ref={verseListRef}
+        className="flex flex-col gap-1 pb-2.5 border-b border-white/10" 
+        id="active-chapter-summary-header"
+      >
         <div className="flex justify-between items-start gap-2">
           <span className="font-sans text-xs font-semibold text-gray-200">
             {selectedChapter === "all" 
